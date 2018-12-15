@@ -15,6 +15,28 @@ h1{
   padding: 20px 0;
 }
 
+#stripe{
+  background-color: white;
+  padding: 10px;
+}
+
+.mode{
+  float: right;
+  color: steelblue;
+  font-size: 20px;
+  font-weight: bold;
+  background: transparent;
+  border: none !important;
+}
+
+#reset{
+  color: steelblue;
+  font-size: 20px;
+  font-weight: bold;
+  background: transparent;
+  border: none !important;
+}
+
 #container{
   margin: 20px auto;
   max-width: 600px;
@@ -31,3 +53,7 @@ h1{
   -webkit-transition: background 0.6s;
   -moz-transition: background 0.6s;
 }
+
+
+
+

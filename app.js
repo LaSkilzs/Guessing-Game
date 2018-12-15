@@ -1,22 +1,29 @@
+// ONLOAD CODE
 
-// Game Starts 
-// 1. Start Game, CPU generate random RGB number (place number in H1 tag in header)
-// 2. Easy  -- displays 3 tags (press)
-// 3. Hard -- displays 6 tags(press)
-// 4. Start Game, pressed, (New Colors), New Colors pressed, Try Again? when game over
-// 5. If win Try Again changes to Correct!
+document.addEventListener('DOMContentLoaded', () => {
+  gameLoad();
+})
 
 
-// Start game Button
-const game = document.querySelector('#stripe');
+
+
 // Easy/ Hard Mode -- Node List
 const mode = document.querySelectorAll('.mode');
+// New Colors button
+const reset = document.querySelector('#reset')
 // Div tags
 const divs = document.querySelectorAll('.square');
 // Message
 const message = document.querySelector('#message');
-// Header
-const header = document.querySelector('#colorDisplay');
+// span
+const span = document.querySelector('#colorDisplay');
+// header
+const head = document.getElementsByTagName('h1');
+
+// EASY
+const easy = document.getElementById('mode').setAttribute('selected', 'selected');
+// HARD
+const hard = document.getElementById('mode').setAttribute('selected', 'selected');
 
 
 // GENERATE RANDOM GUESS VALUE (0-255)
@@ -26,13 +33,17 @@ function guess() {
   return rand
 }
 
+function rgb() {
+  return `rgb(${guess()}, ${guess()}, ${guess()})`
+}
+
 // FUNCTION TO LOAD ALL EVENT LISTENERS
 
 loadEventListeners();
 
 function loadEventListeners() {
   // NEW COLORS BUTTON
-  game.addEventListener('click', startGame);
+  reset.addEventListener('click', resetGame);
 
   // SQUARE DIVS
   divs.forEach(function (div) {
@@ -41,86 +52,143 @@ function loadEventListeners() {
 
   // EASY / HARD BUTTON
   mode.forEach(function (mode) {
-    mode.addEventListener('click', toggleGameLevel)
+    mode.addEventListener('click', changeMode)
   });
 }
 
-// StartGame --  add RGB to h-tag
-function startGame(e) {
-  // Step1 -- Create element
-  const rgb = document.createElement('h1');
 
-  // Step2 -- Add class
-  rgb.className = 'add-rgb';
+function gameLoad() {
+  let randomColors = new Array;
+  let rand = Math.ceil(Math.random() * 5);
 
-  // Step3 -- Create text node -- ADDS RGB COLOR SCHEME TO HEADER
-  rgb.appendChild(document.createTextNode
-    (`RGB(${guess()}, ${guess()}, ${guess()})`));
+  for (let i = 0; i < 6; i++) {
+    randomColors[i] = rgb();
+  }
 
-  // Step4 -- Append h1 to form
-  header.appendChild(rgb);
+  span.innerHTML = randomColors[rand];
 
-  // 1. CHANGES TO ALL DIV COLORS
-  const divList = Array.from(divs);
+  function assignDivColors() {
+    const divList = Array.from(divs);
 
-  divList.forEach(function (div) {
-    div.style.backgroundColor = `rgb(guess(), guess(), guess())`
-  });
+    divList.forEach(function (div, i) {
+      div.style.backgroundColor = randomColors[i];
+    });
+  }
+  assignDivColors();
+}
 
-
+function resetGame(e) {
+  reset.style.backgroundColor = 'steelblue';
+  reset.style.color = "white";
+  reset.innerHTML = "New Colors";
+  gameLoad();
   e.preventDefault();
 }
 
-function changeMessage() {
+
+function changeMode(e) {
+  modeList = Array.from(mode);
+  divsList = Array.from(divs);
+
+  modeList.forEach(function (btn) {
+    if (btn.innerText === "Easy") {
+      btn.setAttribute('selected', 'selected')
+      btn.style.backgroundColor = 'steelblue';
+      btn.style.color = 'white';
+
+      for (let i = 0; i < 3; i++) {
+        divsList[i].style.display = 'none';
+      }
+    } else {
+      btn.style.backgroundColor = 'steelblue';
+      btn.style.color = "white";
+
+      for (let i = 0; i < divsList.length; i++) {
+        divsList[i].style.display
+      }
+    }
+    e.preventDefault();
+  });
+
+
+  /* MODE
+1.
+  1. function easyMode -- calls reset and only display 3
+   divs / changes background to header
+  2. function hardMode -- calls reset and displays all divs /
+  changes background to header
+*/
+
+
+
 
 }
 
-
-
-function changeDivColors() {
-
-
-  // let gameStatus = ['Try Again', 'Correct'];
-
-  // if div !== "guessedColor"
-  //   div.style.display = "none"
-  //   game.appendChild(gameStatus[0])
-  // else
-  //   divList.forEach(function(div){
-  //   div.style.backgroundColor = "guessedColor"
-  //   game.appendChild(gameStatus[1])
-  //   }
-
-
-
-
-
-
-  // 1. Press wrong div "Try Again appears and div disappears"
-
-  // this.style.backgroundColor = guess();
+function changeDivColors(e) {
 
 }
 
-function toggleGameLevel(e) {
-  // 1. CHANGES TO ALL DIV COLORS
-  // 2. ADDS RGB COLOR SCHEME TO 
-  // 3. ENSURES ON ONLY 3 DIVS ARE SHOWN
+function gameWin(e) {
+  /* GAME SUCCESS
+  1. if userColor === cpuColor
+      message.innerText =  "Correct!"
+      all divs && header === correct color
+      reset.innerText  === "PLAY AGAIN?"
+    end
+*/
 
-  // HARD BUTTON
-  // 1. CHANGES TO ALL DIV COLORS
-  // 2. ADDS RGB COLOR SCHEME TO 
-  // 3. ENSURES ON ONLY 6 DIVS ARE SHOWN
 }
 
 
 function gameOver(e) {
-  // 2. When correct all divs/ HEADER turn winning color
-
-  // 3. Try again turns to 'Play again
-
-  // message shows --- correct!
+  /* GAME FAILURE
+  1. if userColor !== cpuColor
+     message.innerText =  "TRY AGAIN"
+     choose div === display.none
+*/
 }
 
-// change color to all div tags
+
+/*
+    Toggle Logic
+    1. "New Colors"
+      if button name == "new colors"
+        - change color / div colors "
+      else if  -- "Play Again?"
+        - change color / div colors
+        - text back to "New Colors"
+      end
+
+    2. "Easy"
+      -- change div count to 3
+      -- change colors /div colors
+
+    3. "Hard"
+      -- change div count to 6
+      -- chante colors / div colors
+*/
+
+// function gameLoad(e) {
+//   //header with color in 35px" white font, bold
+//   span.innerHTML = rgb();
+
+//   // color of header
+//   span.style.backgroundColor = rgb();
+
+//   // function to divColor 
+//   function changeDivColors() {
+//     // // 1. CHANGES TO ALL DIV COLORS
+//     const divList = Array.from(divs);
+
+//     divList.forEach(function (div) {
+//       div.style.backgroundColor = rgb();
+//     });
+
+//   }
+
+
+
+
+
+
 
