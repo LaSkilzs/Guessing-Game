@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-
+// UI VARIABLES
 
 // Easy/ Hard Mode -- Node List
 const mode = document.querySelectorAll('.mode');
@@ -20,25 +20,18 @@ const span = document.querySelector('#colorDisplay');
 // header
 const head = document.getElementsByTagName('h1');
 
-// EASY
-const easy = document.getElementById('mode').setAttribute('selected', 'selected');
-// HARD
-const hard = document.getElementById('mode').setAttribute('selected', 'selected');
 
-
-// GENERATE RANDOM GUESS VALUE (0-255)
-
+// HELPER FUNCTIONS//
 function guess() {
-  rand = Math.ceil(Math.random() * 255 + 1)
+  rand = Math.ceil(Math.random() * 255)
   return rand
 }
-
+// STORE RGB COLOR FOR MANIPULATION IN FUNCTIONS
 function rgb() {
   return `rgb(${guess()}, ${guess()}, ${guess()})`
 }
 
 // FUNCTION TO LOAD ALL EVENT LISTENERS
-
 loadEventListeners();
 
 function loadEventListeners() {
@@ -47,15 +40,16 @@ function loadEventListeners() {
 
   // SQUARE DIVS
   divs.forEach(function (div) {
-    div.addEventListener('onclick', changeDivColors)
+    div.addEventListener('click', changeDivColors)
   });
 
   // EASY / HARD BUTTON
   mode.forEach(function (mode) {
-    mode.addEventListener('click', changeMode)
+    mode.addEventListener('mouseover', changeMode)
   });
 }
 
+// FUNCTIONS //
 
 function gameLoad() {
   let randomColors = new Array;
@@ -66,6 +60,7 @@ function gameLoad() {
   }
 
   span.innerHTML = randomColors[rand];
+  span.style.fontSize = '68px';
 
   function assignDivColors() {
     const divList = Array.from(divs);
@@ -77,114 +72,65 @@ function gameLoad() {
   assignDivColors();
 }
 
+
 function resetGame(e) {
-  reset.style.backgroundColor = 'steelblue';
+  reset.style['background-color'] = 'steelblue';
   reset.style.color = "white";
   reset.innerHTML = "New Colors";
+  message.innerText = "";
   gameLoad();
   e.preventDefault();
 }
 
 
 function changeMode(e) {
-  modeList = Array.from(mode);
+
   divsList = Array.from(divs);
-
-  modeList.forEach(function (btn) {
-    if (btn.innerText === "Easy") {
-      btn.setAttribute('selected', 'selected')
-      btn.style.backgroundColor = 'steelblue';
-      btn.style.color = 'white';
-
-      for (let i = 0; i < 3; i++) {
-        divsList[i].style.display = 'none';
-      }
-    } else {
-      btn.style.backgroundColor = 'steelblue';
-      btn.style.color = "white";
-
-      for (let i = 0; i < divsList.length; i++) {
-        divsList[i].style.display
-      }
-    }
-    e.preventDefault();
-  });
-
-
-  /* MODE
-1.
-  1. function easyMode -- calls reset and only display 3
-   divs / changes background to header
-  2. function hardMode -- calls reset and displays all divs /
-  changes background to header
-*/
-
-
-
-
+  if (e.target.innerText === "Easy") {
+    e.target.style.backgroundColor = 'steelblue';
+    e.target.style.color = 'white';
+    divsList[3].style.opacity = '0';
+    divsList[4].style.opacity = '0';
+    divsList[5].style.opacity = '0';
+  } else {
+    e.target.style.backgroundColor = 'steelblue';
+    e.target.style.color = 'white';
+    divsList[3].style.opacity = '1';
+    divsList[4].style.opacity = '1';
+    divsList[5].style.opacity = '1';
+  }
+  gameLoad();
+  e.preventDefault();
 }
 
 function changeDivColors(e) {
+  if (e.target.style['background-color'] === span.innerText.toLowerCase()) {
+    gameWin();
+  } else {
+    e.target.style.opacity = 0;
+    message.innerText = 'Try Again'
+    message.style.textCenter;
+  }
 
 }
 
 function gameWin(e) {
-  /* GAME SUCCESS
-  1. if userColor === cpuColor
-      message.innerText =  "Correct!"
-      all divs && header === correct color
-      reset.innerText  === "PLAY AGAIN?"
-    end
-*/
+  divsList = Array.from(divs)
+  color = span.innerText.toLowerCase();
+  reset.innerText = "Play Again?";
+  head[0].style['background-color'] = color;
 
+  divsList.forEach(function (div) {
+    div.style.opacity = 1;
+    div.style.backgroundColor = color;
+  });
+  message.innerText = 'Correct!'
 }
 
 
-function gameOver(e) {
-  /* GAME FAILURE
-  1. if userColor !== cpuColor
-     message.innerText =  "TRY AGAIN"
-     choose div === display.none
-*/
-}
 
 
-/*
-    Toggle Logic
-    1. "New Colors"
-      if button name == "new colors"
-        - change color / div colors "
-      else if  -- "Play Again?"
-        - change color / div colors
-        - text back to "New Colors"
-      end
 
-    2. "Easy"
-      -- change div count to 3
-      -- change colors /div colors
-
-    3. "Hard"
-      -- change div count to 6
-      -- chante colors / div colors
-*/
-
-// function gameLoad(e) {
-//   //header with color in 35px" white font, bold
-//   span.innerHTML = rgb();
-
-//   // color of header
-//   span.style.backgroundColor = rgb();
-
-//   // function to divColor 
-//   function changeDivColors() {
-//     // // 1. CHANGES TO ALL DIV COLORS
-//     const divList = Array.from(divs);
-
-//     divList.forEach(function (div) {
-//       div.style.backgroundColor = rgb();
-//     });
-
-//   }
 
 
 
